@@ -15,7 +15,8 @@ void TriggerTimer::reset() {
 }
 
 bool TriggerTimer::isTriggered() {
-  if (millis() > (this->lastPass + this->triggerTime)) {
+  bool triggered = millis() > (this->lastPass + this->triggerTime);
+  if (triggered) {
     if (this->isResetOnTrigger()) {
       this->reset();
     }
