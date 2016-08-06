@@ -3,7 +3,7 @@
 TriggerTimer::TriggerTimer() {
   this->triggerTime = 1000;
   this->resetOnTrigger = true;
-  this->lastPass = -1000; // so that this is triggered on first call
+  this->lastPass = -this->triggerTime; // so that this is triggered on first call
 }
 
 void TriggerTimer::setTriggerTime(long triggerTime) {
