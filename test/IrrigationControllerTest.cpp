@@ -25,7 +25,7 @@ SCENARIO( "irrigation controller dummy tests", "[IrrigationController]" ) {
 }
 */
 
-
+/*
 SCENARIO( "mock tests" ) {
   GIVEN( "millis" ) {
     unsigned long start = millis();
@@ -39,9 +39,43 @@ SCENARIO( "mock tests" ) {
     }
   }
 }
+*/
 
-SCENARIO( "IrrigationController modes" ) {
-  GIVEN( "a fresh IrrigationController") {
+SCENARIO( "process at certain intervals" ) {
+  GIVEN( "a fresh instance" ) {
+    IrrigationController c;
+    WHEN( "tick called after creation" ) {
+      bool first = c.tick();
+      THEN( "returns true" ) {
+        REQUIRE( first );
+      }
+    }
+    WHEN( "tick called after 1 second" ) {
+      bool first = c.tick(); // returns true, resets timer
+      delay(1100);
+      bool second = c.tick();
+      THEN( "returns true" ) {
+        REQUIRE( second );
+      }
+    }
+    WHEN( "tick called immediately after successful call" ) {
+      c.tick();
+      bool third = c.tick();
+      THEN( "return false" ) {
+        REQUIRE( !third );
+      }
+    }
+    WHEN( "when created" ) {
+      THEN( "timer is set to default" ) {
+        long triggerTime = c.getTriggerTimer()->getTriggerTime();
+        REQUIRE( triggerTime == 1000 );
+      }
+    }
+  }
+}
+
+SCENARIO( "modes" ) {
+  GIVEN( "a fresh instances") {
     IrrigationController c;
     WHEN( "get mode" ) {
       int mode = c.getMode();
