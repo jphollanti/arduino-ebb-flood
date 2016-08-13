@@ -18,7 +18,6 @@ int IrrigationController::modeTransitions[4] = {
 };
 
 IrrigationController::IrrigationController() {
-  this->setDefaults();
 }
 
 void IrrigationController::setDefaults() {
