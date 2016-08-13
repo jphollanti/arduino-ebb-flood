@@ -9,7 +9,7 @@ private:
   TriggerTimer *triggerTimer;
   int mode;
   long modeTriggerTimes[3];
-  int modeTransitions[4];
+  static int modeTransitions[4];
 public:
   static int PUMP;
   static int HOLD;

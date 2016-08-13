@@ -10,12 +10,14 @@ int IrrigationController::HOLD = 1;
 int IrrigationController::WAIT = 2;
 int IrrigationController::INIT = 3;
 
-IrrigationController::IrrigationController() {
-  this->modeTransitions[IrrigationController::PUMP] = IrrigationController::HOLD;
-  this->modeTransitions[IrrigationController::HOLD] = IrrigationController::WAIT;
-  this->modeTransitions[IrrigationController::WAIT] = IrrigationController::PUMP;
-  this->modeTransitions[IrrigationController::INIT] = IrrigationController::PUMP;
+int IrrigationController::modeTransitions[4] = {
+  IrrigationController::HOLD, // from pump
+  IrrigationController::WAIT, // from hold
+  IrrigationController::PUMP, // from wait
+  IrrigationController::PUMP  // from init
+};
 
+IrrigationController::IrrigationController() {
   this->setDefaults();
 }
 
