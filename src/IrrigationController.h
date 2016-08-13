@@ -1,15 +1,15 @@
 #pragma once
 #ifndef IrrigationController_h
 #define IrrigationController_h
-#include "Time.h"
+#include "TimeUnit.h"
 #include "TriggerTimer.h"
 
 class IrrigationController {
 private:
   TriggerTimer *triggerTimer;
-  Time *pumpTime;
-  Time *holdTime;
-  Time *waitTime;
+  TimeUnit *pumpTime;
+  TimeUnit *holdTime;
+  TimeUnit *waitTime;
   int mode;
 public:
   static int PUMP;
@@ -19,9 +19,9 @@ public:
   int getMode();
   bool tick();
   TriggerTimer* getTriggerTimer();
-  void setPumpTime(Time *time);
-  void setHoldTime(Time *time);
-  void setWaitTime(Time *time);
+  void setPumpTime(TimeUnit *time);
+  void setHoldTime(TimeUnit *time);
+  void setWaitTime(TimeUnit *time);
 };
 
 #endif

@@ -1,8 +1,8 @@
 #pragma once
-#ifndef Time_h
-#define Time_h
+#ifndef TimeUnit_h
+#define TimeUnit_h
 
-class Time {
+class TimeUnit {
 public:
   virtual long getMilliseconds() = 0;
 };
