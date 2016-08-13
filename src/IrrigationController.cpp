@@ -17,21 +17,31 @@ int IrrigationController::modeTransitions[4] = {
   IrrigationController::PUMP  // from init
 };
 
+long IrrigationController::modeTriggerTimes[3] = {
+  100, // pump
+  100, // hold
+  100, // wait
+};
+
 IrrigationController::IrrigationController() {
 
 }
 
 void IrrigationController::setDefaults() {
-    this->pumpTime = new SecondTimeUnit(27);
-    this->holdTime = new SecondTimeUnit(120);
-    this->waitTime = new HourTimeUnit(6);
+  TimeUnit *pumpTime = new SecondTimeUnit(27);
+  TimeUnit *holdTime = new SecondTimeUnit(120);
+  TimeUnit *waitTime = new HourTimeUnit(6);
+
+  this->modeTriggerTimes[IrrigationController::PUMP] = pumpTime->getMilliseconds();
+  this->modeTriggerTimes[IrrigationController::HOLD] = holdTime->getMilliseconds();
+  this->modeTriggerTimes[IrrigationController::WAIT] = waitTime->getMilliseconds();
 }
 
 void IrrigationController::initialize() {
-    this->triggerTimer = new TriggerTimer();
-    this->triggerTimer->setTriggerTime(this->pumpTime->getMilliseconds());
-    this->triggerTimer->initialize();
-    this->mode = IrrigationController::INIT;
+  this->triggerTimer = new TriggerTimer();
+  this->triggerTimer->setTriggerTime(1);
+  this->triggerTimer->initialize();
+  this->mode = IrrigationController::INIT;
 }
 
 int IrrigationController::getMode() {
@@ -41,6 +51,7 @@ int IrrigationController::getMode() {
 bool IrrigationController::tick() {
   if (this->triggerTimer->isTriggered()) {
     this->mode = IrrigationController::modeTransitions[this->mode];
+    this->triggerTimer->setTriggerTime(this->modeTriggerTimes[this->mode]);
     return true;
   } else {
     return false;
@@ -52,11 +63,11 @@ TriggerTimer* IrrigationController::getTriggerTimer() {
 }
 
 void IrrigationController::setPumpTime(TimeUnit *time) {
-  this->pumpTime = time;
+  this->modeTriggerTimes[IrrigationController::PUMP] = time->getMilliseconds();
 }
 void IrrigationController::setHoldTime(TimeUnit *time) {
-  this->holdTime = time;
+  this->modeTriggerTimes[IrrigationController::HOLD] = time->getMilliseconds();
 }
 void IrrigationController::setWaitTime(TimeUnit *time) {
-  this->waitTime = time;
+  this->modeTriggerTimes[IrrigationController::WAIT] = time->getMilliseconds();
 }

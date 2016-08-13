@@ -46,7 +46,7 @@ SCENARIO( "mock tests" ) {
 }
 */
 
-SCENARIO( "modes" ) {
+SCENARIO( "mode transitions" ) {
   GIVEN( "a fresh instances") {
     IrrigationController c;
     c.setPumpTime(new MilliSecondTimeUnit(100));
@@ -109,6 +109,77 @@ SCENARIO( "modes" ) {
 
       THEN( "mode is pump again" ) {
         REQUIRE( c.getMode() == IrrigationController::PUMP );
+      }
+    }
+  }
+
+  GIVEN( "an instance with different times for pump, hold and wait") {
+    IrrigationController c;
+    c.setPumpTime(new MilliSecondTimeUnit(100));
+    c.setHoldTime(new MilliSecondTimeUnit(200));
+    c.setWaitTime(new MilliSecondTimeUnit(300));
+    c.initialize();
+    c.tick(); // from init to pump
+
+    WHEN( "tick called repeatedly before pump time expires" ) {
+      for (int i=0; i<9; i++) {
+        delay(10);
+        c.tick();
+      }
+      THEN( "mode is still pump" ) {
+        REQUIRE( c.getMode() == IrrigationController::PUMP );
+      }
+    }
+
+    WHEN( "tick called after pump time expires" ) {
+      for (int i=0; i<11; i++) {
+        delay(10);
+        c.tick();
+      }
+      THEN( "mode is hold" ) {
+        REQUIRE( c.getMode() == IrrigationController::HOLD );
+      }
+    }
+
+    WHEN( "tick called after pump and hold times expire" ) {
+      // pump time is passed at 11th pass (11 * 10 ms > 100ms) and timer is
+      // reset only then.
+      //
+      // hold time is passed when 21 more passes occur (21 * 10ms > 200ms)
+      // and timer is reset only then.
+      //
+      // so we lose 2 (20ms) passes per state transition. hence, we need to
+      // iterate 32 times in order to reach wait mode.
+      //
+      // this is okay, given the mechanism of how the timer is triggered.
+      for (int i=0; i<32; i++) {
+        delay(10);
+        c.tick();
+      }
+      THEN( "mode is wait" ) {
+        REQUIRE( c.getMode() == IrrigationController::WAIT );
+      }
+    }
+
+    WHEN( "tick called after pump, hold and wait times expire" ) {
+      // this time around, we'll need to allow 30 ms for transitions.
+      for (int i=0; i<63; i++) {
+        delay(10);
+        c.tick();
+      }
+      THEN( "mode is pump" ) {
+        REQUIRE( c.getMode() == IrrigationController::PUMP );
+      }
+    }
+
+    // let's test that the timers still roll properly after one loop
+    WHEN( "after one loop and pump mode expiration time" ) {
+      for (int i=0; i<74; i++) {
+        delay(10);
+        c.tick();
+      }
+      THEN( "mode is hold" ) {
+        REQUIRE( c.getMode() == IrrigationController::HOLD );
       }
     }
   }
