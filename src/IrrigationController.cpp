@@ -40,6 +40,14 @@ bool IrrigationController::tick() {
       this->mode = IrrigationController::HOLD;
       return true;
     }
+    if (this->mode == IrrigationController::HOLD) {
+      this->mode = IrrigationController::WAIT;
+      return true;
+    }
+    if (this->mode == IrrigationController::WAIT) {
+      this->mode = IrrigationController::PUMP;
+      return true;
+    }
   } else {
     return false;
   }

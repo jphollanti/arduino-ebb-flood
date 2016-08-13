@@ -62,7 +62,7 @@ SCENARIO( "modes" ) {
     }
 
     WHEN( "started" ) {
-      cout << "mode change: " << c.tick() << endl;
+      c.tick(); // mode from init to pump
       int mode = c.getMode();
       THEN( "mode is pump" ) {
         REQUIRE( c.getMode() == IrrigationController::PUMP );
@@ -70,19 +70,45 @@ SCENARIO( "modes" ) {
     }
 
     WHEN( "pump mode is done" ) {
-      bool modeChanged = c.tick();
+      c.tick(); // mode from init to pump
       delay(110);
-      c.tick();
-      bool triggered = c.tick();
+      bool modeChanged = c.tick(); // mode from pump to hold
+      bool triggeredImmediatelyAfter = c.tick();
 
       THEN( "mode change is triggered" ) {
         REQUIRE( modeChanged );
       }
       THEN( "should not trigger again immediately after" ) {
-        REQUIRE( !triggered );
+        REQUIRE( !triggeredImmediatelyAfter );
       }
       THEN( "mode is hold" ) {
         REQUIRE( c.getMode() == IrrigationController::HOLD );
+      }
+    }
+
+    WHEN( "hold mode is done" ) {
+      c.tick(); // mode from init to pump
+      delay(110);
+      c.tick(); // mode from pump to hold
+      delay(110);
+      c.tick(); // mode from hold to wait
+
+      THEN( "mode is wait" ) {
+        REQUIRE( c.getMode() == IrrigationController::WAIT );
+      }
+    }
+
+    WHEN( "wait mode is done" ) {
+      c.tick(); // mode from init to pump
+      delay(110);
+      c.tick(); // mode from pump to hold
+      delay(110);
+      c.tick(); // mode from hold to wait
+      delay(110);
+      c.tick(); // mode from wait to pump
+
+      THEN( "mode is pump again" ) {
+        REQUIRE( c.getMode() == IrrigationController::PUMP );
       }
     }
   }
