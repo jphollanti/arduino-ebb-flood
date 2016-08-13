@@ -17,13 +17,10 @@ int IrrigationController::modeTransitions[4] = {
   IrrigationController::PUMP  // from init
 };
 
-IrrigationController::IrrigationController() {
-}
-
-void IrrigationController::setDefaults() {
-  this->setPumpTime(new SecondTimeUnit(27));
-  this->setHoldTime(new SecondTimeUnit(120));
-  this->setWaitTime(new HourTimeUnit(6));
+IrrigationController::IrrigationController(TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime) {
+  this->setPumpTime(pumpTime);
+  this->setHoldTime(holdTime);
+  this->setWaitTime(waitTime);
 }
 
 void IrrigationController::initialize() {

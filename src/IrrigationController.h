@@ -10,21 +10,21 @@ private:
   int mode;
   long modeTriggerTimes[3];
   static int modeTransitions[4];
+
+  void setPumpTime(TimeUnit *time);
+  void setHoldTime(TimeUnit *time);
+  void setWaitTime(TimeUnit *time);
 public:
   static int PUMP;
   static int HOLD;
   static int WAIT;
   static int INIT;
 
-  IrrigationController();
-  void setDefaults();
+  IrrigationController(TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime);
   void initialize();
   int getMode();
   bool tick();
   TriggerTimer* getTriggerTimer();
-  void setPumpTime(TimeUnit *time);
-  void setHoldTime(TimeUnit *time);
-  void setWaitTime(TimeUnit *time);
 };
 
 #endif

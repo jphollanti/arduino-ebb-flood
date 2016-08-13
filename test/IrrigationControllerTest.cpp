@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "mock/Arduino.h"
 #include <IrrigationController.h>
+#include <IrrigationControllerBuilder.h>
 #include <MilliSecondTimeUnit.h>
 #include <TimeUnit.h>
 #include <SecondTimeUnit.h>
@@ -48,11 +49,12 @@ SCENARIO( "mock tests" ) {
 
 SCENARIO( "mode transitions" ) {
   GIVEN( "a fresh instances") {
-    IrrigationController c;
-    c.setPumpTime(new MilliSecondTimeUnit(100));
-    c.setHoldTime(new MilliSecondTimeUnit(100));
-    c.setWaitTime(new MilliSecondTimeUnit(100));
-    c.initialize();
+    IrrigationControllerBuilder builder;
+    IrrigationController c =
+        builder.pumpTime(new MilliSecondTimeUnit(100))
+             ->holdTime(new MilliSecondTimeUnit(100))
+             ->waitTime(new MilliSecondTimeUnit(100))
+             ->build();
 
     WHEN( "get mode" ) {
       int mode = c.getMode();
@@ -114,11 +116,12 @@ SCENARIO( "mode transitions" ) {
   }
 
   GIVEN( "an instance with different times for pump, hold and wait") {
-    IrrigationController c;
-    c.setPumpTime(new MilliSecondTimeUnit(100));
-    c.setHoldTime(new MilliSecondTimeUnit(200));
-    c.setWaitTime(new MilliSecondTimeUnit(300));
-    c.initialize();
+    IrrigationControllerBuilder builder;
+    IrrigationController c =
+        builder.pumpTime(new MilliSecondTimeUnit(100))
+             ->holdTime(new MilliSecondTimeUnit(200))
+             ->waitTime(new MilliSecondTimeUnit(300))
+             ->build();
     c.tick(); // from init to pump
 
     WHEN( "tick called repeatedly before pump time expires" ) {
