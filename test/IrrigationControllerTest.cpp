@@ -2,6 +2,11 @@
 #include "catch.hpp"
 #include "mock/Arduino.h"
 #include <IrrigationController.h>
+#include <MilliSecondTimeUnit.h>
+#include <TimeUnit.h>
+#include <SecondTimeUnit.h>
+#include <MinuteTimeUnit.h>
+#include <HourTimeUnit.h>
 
 using namespace std;
 
@@ -41,57 +46,44 @@ SCENARIO( "mock tests" ) {
 }
 */
 
-SCENARIO( "process at certain intervals" ) {
-  GIVEN( "a fresh instance" ) {
-    IrrigationController c;
-    WHEN( "tick called after creation" ) {
-      bool first = c.tick();
-      THEN( "returns true" ) {
-        REQUIRE( first );
-      }
-    }
-    WHEN( "tick called after 1 second" ) {
-      bool first = c.tick(); // returns true, resets timer
-      delay(1100);
-      bool second = c.tick();
-      THEN( "returns true" ) {
-        REQUIRE( second );
-      }
-    }
-    WHEN( "tick called immediately after successful call" ) {
-      c.tick();
-      bool third = c.tick();
-      THEN( "return false" ) {
-        REQUIRE( !third );
-      }
-    }
-    WHEN( "when created" ) {
-      THEN( "timer is set to default" ) {
-        long triggerTime = c.getTriggerTimer()->getTriggerTime();
-        REQUIRE( triggerTime == 1000 );
-      }
-    }
-  }
-}
-
 SCENARIO( "modes" ) {
   GIVEN( "a fresh instances") {
     IrrigationController c;
+    c.setPumpTime(new MilliSecondTimeUnit(100));
+    c.setHoldTime(new MilliSecondTimeUnit(100));
+    c.setWaitTime(new MilliSecondTimeUnit(100));
+    c.initialize();
+
     WHEN( "get mode" ) {
       int mode = c.getMode();
-      THEN ( "mode is pump" ) {
-        REQUIRE( IrrigationController::PUMP );
+      THEN( "mode is init" ) {
+        REQUIRE( c.getMode() == IrrigationController::INIT );
       }
     }
 
-    /*
-    WHEN( "pump mode is done" ) {
-      c.setPumpForSeconds(1);
-
-      THEN( "next is hold mode" ) {
-
+    WHEN( "started" ) {
+      cout << "mode change: " << c.tick() << endl;
+      int mode = c.getMode();
+      THEN( "mode is pump" ) {
+        REQUIRE( c.getMode() == IrrigationController::PUMP );
       }
+    }
 
-    }*/
+    WHEN( "pump mode is done" ) {
+      bool modeChanged = c.tick();
+      delay(110);
+      c.tick();
+      bool triggered = c.tick();
+
+      THEN( "mode change is triggered" ) {
+        REQUIRE( modeChanged );
+      }
+      THEN( "should not trigger again immediately after" ) {
+        REQUIRE( !triggered );
+      }
+      THEN( "mode is hold" ) {
+        REQUIRE( c.getMode() == IrrigationController::HOLD );
+      }
+    }
   }
 }

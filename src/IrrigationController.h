@@ -15,7 +15,10 @@ public:
   static int PUMP;
   static int HOLD;
   static int WAIT;
+  static int INIT;
   IrrigationController();
+  void setDefaults();
+  void initialize();
   int getMode();
   bool tick();
   TriggerTimer* getTriggerTimer();

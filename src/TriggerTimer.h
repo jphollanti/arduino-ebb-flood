@@ -9,14 +9,15 @@ class TriggerTimer {
     bool resetOnTrigger;
   public:
     TriggerTimer();
+    void initialize();
     void reset();
     void setTriggerTime(long triggerTime);
+    long getTriggerTime();
     void setResetOnTrigger(bool resetOnTrigger);
     bool isResetOnTrigger();
     bool isTriggered();
-    long getLastPass();
     void setLastPass(long lastPass);
-    long getTriggerTime();
+    long getLastPass();
 };;
 
 #endif

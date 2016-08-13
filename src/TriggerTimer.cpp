@@ -3,11 +3,18 @@
 TriggerTimer::TriggerTimer() {
   this->triggerTime = 1000;
   this->resetOnTrigger = true;
+}
+
+void TriggerTimer::initialize() {
   this->lastPass = -this->triggerTime; // so that this is triggered on first call
 }
 
 void TriggerTimer::setTriggerTime(long triggerTime) {
   this->triggerTime = triggerTime;
+}
+
+long TriggerTimer::getTriggerTime() {
+  return this->triggerTime;
 }
 
 void TriggerTimer::reset() {
@@ -34,14 +41,10 @@ void TriggerTimer::setResetOnTrigger(bool resetOnTrigger) {
   this->resetOnTrigger = resetOnTrigger;
 }
 
-long TriggerTimer::getLastPass() {
-  return this->lastPass;
-}
-
 void TriggerTimer::setLastPass(long lastPass) {
   this->lastPass = lastPass;
 }
 
-long TriggerTimer::getTriggerTime() {
-  return this->triggerTime;
+long TriggerTimer::getLastPass() {
+  return this->lastPass;
 }

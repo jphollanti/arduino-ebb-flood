@@ -8,23 +8,41 @@
 int IrrigationController::PUMP = 1;
 int IrrigationController::HOLD = 2;
 int IrrigationController::WAIT = 3;
+int IrrigationController::INIT = 4;
 
 IrrigationController::IrrigationController() {
-  this->triggerTimer = new TriggerTimer();
+}
 
-  this->pumpTime = new SecondTimeUnit(27);
-  this->holdTime = new SecondTimeUnit(120);
-  this->waitTime = new HourTimeUnit(6);
+void IrrigationController::setDefaults() {
+    this->pumpTime = new SecondTimeUnit(27);
+    this->holdTime = new SecondTimeUnit(120);
+    this->waitTime = new HourTimeUnit(6);
+}
 
-  this->mode = IrrigationController::PUMP;
+void IrrigationController::initialize() {
+    this->triggerTimer = new TriggerTimer();
+    this->triggerTimer->setTriggerTime(this->pumpTime->getMilliseconds());
+    this->triggerTimer->initialize();
+    this->mode = IrrigationController::INIT;
 }
 
 int IrrigationController::getMode() {
-  return IrrigationController::PUMP;
+  return this->mode;
 }
 
 bool IrrigationController::tick() {
-  return this->triggerTimer->isTriggered();
+  if (this->triggerTimer->isTriggered()) {
+    if (this->mode == IrrigationController::INIT) {
+      this->mode = IrrigationController::PUMP;
+      return true;
+    }
+    if (this->mode == IrrigationController::PUMP) {
+      this->mode = IrrigationController::HOLD;
+      return true;
+    }
+  } else {
+    return false;
+  }
 }
 
 TriggerTimer* IrrigationController::getTriggerTimer() {
