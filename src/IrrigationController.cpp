@@ -44,10 +44,6 @@ bool IrrigationController::tick() {
   }
 }
 
-TriggerTimer* IrrigationController::getTriggerTimer() {
-  return this->triggerTimer;
-}
-
 void IrrigationController::setPumpTime(TimeUnit *time) {
   this->modeTriggerTimes[IrrigationController::PUMP] = time->getMilliseconds();
 }

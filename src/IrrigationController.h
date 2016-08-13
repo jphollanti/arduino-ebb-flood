@@ -24,7 +24,6 @@ public:
   void initialize();
   int getMode();
   bool tick();
-  TriggerTimer* getTriggerTimer();
 };
 
 #endif
