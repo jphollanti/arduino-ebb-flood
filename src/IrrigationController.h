@@ -8,8 +8,8 @@ class IrrigationController {
 private:
   TriggerTimer *triggerTimer;
   int mode;
-  static long modeTriggerTimes[3];
-  static int modeTransitions[4];
+  long modeTriggerTimes[3];
+  int modeTransitions[4];
 public:
   static int PUMP;
   static int HOLD;
