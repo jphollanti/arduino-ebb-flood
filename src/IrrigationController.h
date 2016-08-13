@@ -7,9 +7,6 @@
 class IrrigationController {
 private:
   TriggerTimer *triggerTimer;
-  TimeUnit *pumpTime;
-  TimeUnit *holdTime;
-  TimeUnit *waitTime;
   int mode;
   static long modeTriggerTimes[3];
   static int modeTransitions[4];
@@ -18,6 +15,7 @@ public:
   static int HOLD;
   static int WAIT;
   static int INIT;
+
   IrrigationController();
   void setDefaults();
   void initialize();

@@ -17,6 +17,7 @@ int IrrigationController::modeTransitions[4] = {
   IrrigationController::PUMP  // from init
 };
 
+// just for initialization
 long IrrigationController::modeTriggerTimes[3] = {
   100, // pump
   100, // hold
@@ -28,13 +29,9 @@ IrrigationController::IrrigationController() {
 }
 
 void IrrigationController::setDefaults() {
-  TimeUnit *pumpTime = new SecondTimeUnit(27);
-  TimeUnit *holdTime = new SecondTimeUnit(120);
-  TimeUnit *waitTime = new HourTimeUnit(6);
-
-  this->modeTriggerTimes[IrrigationController::PUMP] = pumpTime->getMilliseconds();
-  this->modeTriggerTimes[IrrigationController::HOLD] = holdTime->getMilliseconds();
-  this->modeTriggerTimes[IrrigationController::WAIT] = waitTime->getMilliseconds();
+  this->setPumpTime(new SecondTimeUnit(27));
+  this->setHoldTime(new SecondTimeUnit(120));
+  this->setWaitTime(new HourTimeUnit(6));
 }
 
 void IrrigationController::initialize() {
