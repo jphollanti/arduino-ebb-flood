@@ -5,12 +5,20 @@
 #include "MinuteTimeUnit.h"
 #include "HourTimeUnit.h"
 
-int IrrigationController::PUMP = 1;
-int IrrigationController::HOLD = 2;
-int IrrigationController::WAIT = 3;
-int IrrigationController::INIT = 4;
+int IrrigationController::PUMP = 0;
+int IrrigationController::HOLD = 1;
+int IrrigationController::WAIT = 2;
+int IrrigationController::INIT = 3;
+
+int IrrigationController::modeTransitions[4] = {
+  IrrigationController::HOLD, // from pump
+  IrrigationController::WAIT, // from hold
+  IrrigationController::PUMP, // from wait
+  IrrigationController::PUMP  // from init
+};
 
 IrrigationController::IrrigationController() {
+
 }
 
 void IrrigationController::setDefaults() {
@@ -32,22 +40,8 @@ int IrrigationController::getMode() {
 
 bool IrrigationController::tick() {
   if (this->triggerTimer->isTriggered()) {
-    if (this->mode == IrrigationController::INIT) {
-      this->mode = IrrigationController::PUMP;
-      return true;
-    }
-    if (this->mode == IrrigationController::PUMP) {
-      this->mode = IrrigationController::HOLD;
-      return true;
-    }
-    if (this->mode == IrrigationController::HOLD) {
-      this->mode = IrrigationController::WAIT;
-      return true;
-    }
-    if (this->mode == IrrigationController::WAIT) {
-      this->mode = IrrigationController::PUMP;
-      return true;
-    }
+    this->mode = IrrigationController::modeTransitions[this->mode];
+    return true;
   } else {
     return false;
   }

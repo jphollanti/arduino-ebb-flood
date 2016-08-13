@@ -11,6 +11,7 @@ private:
   TimeUnit *holdTime;
   TimeUnit *waitTime;
   int mode;
+  static int modeTransitions[4];
 public:
   static int PUMP;
   static int HOLD;
