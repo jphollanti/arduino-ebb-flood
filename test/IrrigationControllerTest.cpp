@@ -135,6 +135,7 @@ SCENARIO( "mode transitions" ) {
       }
       THEN( "mode is still pump" ) {
         REQUIRE( c.getMode() == IrrigationController::PUMP );
+        REQUIRE( analog_pins[1] == 255);
       }
     }
 
@@ -145,6 +146,7 @@ SCENARIO( "mode transitions" ) {
       }
       THEN( "mode is hold" ) {
         REQUIRE( c.getMode() == IrrigationController::HOLD );
+        REQUIRE( analog_pins[1] == 72);
       }
     }
 
@@ -165,6 +167,7 @@ SCENARIO( "mode transitions" ) {
       }
       THEN( "mode is wait" ) {
         REQUIRE( c.getMode() == IrrigationController::WAIT );
+        REQUIRE( analog_pins[1] == 0);
       }
     }
 
@@ -176,6 +179,7 @@ SCENARIO( "mode transitions" ) {
       }
       THEN( "mode is pump" ) {
         REQUIRE( c.getMode() == IrrigationController::PUMP );
+        REQUIRE( analog_pins[1] == 255);
       }
     }
 
@@ -187,6 +191,7 @@ SCENARIO( "mode transitions" ) {
       }
       THEN( "mode is hold" ) {
         REQUIRE( c.getMode() == IrrigationController::HOLD );
+        REQUIRE( analog_pins[1] == 72);
       }
     }
   }

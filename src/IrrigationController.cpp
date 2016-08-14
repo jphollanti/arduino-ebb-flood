@@ -4,6 +4,10 @@
 #include "SecondTimeUnit.h"
 #include "MinuteTimeUnit.h"
 #include "HourTimeUnit.h"
+#include "ModeAction.h"
+#include "PumpModeAction.h"
+#include "HoldModeAction.h"
+#include "WaitModeAction.h"
 
 int IrrigationController::PUMP = 0;
 int IrrigationController::HOLD = 1;
@@ -16,6 +20,13 @@ int IrrigationController::modeTransitions[4] = {
   IrrigationController::PUMP, // from wait
   IrrigationController::PUMP  // from init
 };
+
+ModeAction* IrrigationController::modeActions[3] = {
+  new PumpModeAction(),
+  new HoldModeAction(),
+  new WaitModeAction()
+};
+
 
 IrrigationController::IrrigationController(WaterPump *waterPump, TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime) {
   this->waterPump = waterPump;
@@ -39,6 +50,7 @@ bool IrrigationController::tick() {
   if (this->triggerTimer->isTriggered()) {
     this->mode = IrrigationController::modeTransitions[this->mode];
     this->triggerTimer->setTriggerTime(this->modeTriggerTimes[this->mode]);
+    IrrigationController::modeActions[this->mode]->setMode(this->waterPump);
     return true;
   } else {
     return false;

@@ -39,6 +39,7 @@ extern float analog_pins[6];
 
 void pinMode(unsigned char pin, unsigned char mode);
 void digitalWrite(unsigned char pin, unsigned char level);
+void analogWrite(unsigned char pin, float level);
 float analogRead(unsigned char pin);
 
 #include "FakeSerial.h"

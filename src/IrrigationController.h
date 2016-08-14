@@ -4,6 +4,7 @@
 #include "TimeUnit.h"
 #include "TriggerTimer.h"
 #include "WaterPump.h"
+#include "ModeAction.h"
 
 class IrrigationController {
 private:
@@ -11,6 +12,7 @@ private:
   int mode;
   long modeTriggerTimes[3];
   static int modeTransitions[4];
+  static ModeAction* modeActions[3];
   WaterPump *waterPump;
 
   void setPumpTime(TimeUnit *time);
