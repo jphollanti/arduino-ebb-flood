@@ -5,18 +5,23 @@
 IrrigationControllerBuilder::IrrigationControllerBuilder() {
 }
 
+IrrigationControllerBuilder* IrrigationControllerBuilder::waterPump(WaterPump *waterPump) {
+  this->_waterPump = waterPump;
+  return this;
+}
+
 IrrigationControllerBuilder* IrrigationControllerBuilder::pumpTime(TimeUnit *time) {
-  this->pump = time;
+  this->_pumpTime = time;
   return this;
 };
 
 IrrigationControllerBuilder* IrrigationControllerBuilder::holdTime(TimeUnit *time) {
-  this->hold = time;
+  this->_holdTime = time;
   return this;
 };
 
 IrrigationControllerBuilder* IrrigationControllerBuilder::waitTime(TimeUnit *time) {
-  this->wait = time;
+  this->_waitTime = time;
   return this;
 };
 
@@ -28,7 +33,7 @@ IrrigationControllerBuilder* IrrigationControllerBuilder::defaults() {
 }
 
 IrrigationController IrrigationControllerBuilder::build() {
-  IrrigationController c(this->pump, this->hold, this->wait);
+  IrrigationController c(this->_waterPump, this->_pumpTime, this->_holdTime, this->_waitTime);
   c.initialize();
   return c;
 };

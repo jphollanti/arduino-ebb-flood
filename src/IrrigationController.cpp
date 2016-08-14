@@ -17,7 +17,8 @@ int IrrigationController::modeTransitions[4] = {
   IrrigationController::PUMP  // from init
 };
 
-IrrigationController::IrrigationController(TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime) {
+IrrigationController::IrrigationController(WaterPump *waterPump, TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime) {
+  this->waterPump = waterPump;
   this->setPumpTime(pumpTime);
   this->setHoldTime(holdTime);
   this->setWaitTime(waitTime);

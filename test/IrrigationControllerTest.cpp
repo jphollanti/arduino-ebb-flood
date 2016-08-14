@@ -49,9 +49,11 @@ SCENARIO( "mock tests" ) {
 
 SCENARIO( "mode transitions" ) {
   GIVEN( "a fresh instances") {
+    WaterPump *p = new WaterPump(1,2);
     IrrigationControllerBuilder builder;
     IrrigationController c =
-        builder.pumpTime(new MilliSecondTimeUnit(100))
+        builder.waterPump(p)
+             ->pumpTime(new MilliSecondTimeUnit(100))
              ->holdTime(new MilliSecondTimeUnit(100))
              ->waitTime(new MilliSecondTimeUnit(100))
              ->build();
@@ -116,9 +118,11 @@ SCENARIO( "mode transitions" ) {
   }
 
   GIVEN( "an instance with different times for pump, hold and wait") {
+    WaterPump *p = new WaterPump(1,2);
     IrrigationControllerBuilder builder;
     IrrigationController c =
-        builder.pumpTime(new MilliSecondTimeUnit(100))
+        builder.waterPump(p)
+             ->pumpTime(new MilliSecondTimeUnit(100))
              ->holdTime(new MilliSecondTimeUnit(200))
              ->waitTime(new MilliSecondTimeUnit(300))
              ->build();

@@ -61,6 +61,16 @@ void digitalWrite(unsigned char  pin, unsigned char  level) {
 	digital_pins[pin] = level;
 }
 
-float analogRead(unsigned char  pin) {
+void analogWrite(unsigned char  pin, float level) {
+	if (pin < 0 || pin > 13) {
+		error = 1;
+	}
+	if (level != LOW && level != HIGH) {
+		error = 1;
+	}
+	analog_pins[pin] = level;
+}
+
+float analogRead(unsigned char pin) {
 	return analog_pins[pin];
 }

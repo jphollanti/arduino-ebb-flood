@@ -3,6 +3,7 @@
 #define IrrigationController_h
 #include "TimeUnit.h"
 #include "TriggerTimer.h"
+#include "WaterPump.h"
 
 class IrrigationController {
 private:
@@ -10,6 +11,7 @@ private:
   int mode;
   long modeTriggerTimes[3];
   static int modeTransitions[4];
+  WaterPump *waterPump;
 
   void setPumpTime(TimeUnit *time);
   void setHoldTime(TimeUnit *time);
@@ -20,7 +22,7 @@ public:
   static int WAIT;
   static int INIT;
 
-  IrrigationController(TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime);
+  IrrigationController(WaterPump *waterPump, TimeUnit *pumpTime, TimeUnit *holdTime, TimeUnit *waitTime);
   void initialize();
   int getMode();
   bool tick();
