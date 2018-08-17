@@ -1,28 +1,74 @@
-/**
- * Blink
- *
- * Turns on an LED on for one second,
- * then off for one second, repeatedly.
- */
-#include "Arduino.h"
+#include <Arduino.h>
 
-void setup()
-{
-  // initialize LED digital pin as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
+int pwm_out = 2;
+int current_mode;
+int counter_to_next_mode;
+
+// modes are: 
+// 0 = pump
+// 1 = hold
+// 2 = wait
+
+// pwm describes how fast the pump is
+int mode_pwms[3] = {
+  255, 
+  70, // previous used value: 72 
+  0
+};
+
+// how long each mode should be kept on, in seconds
+int mode_keep[3] = {
+    15, // 27
+    900, // 15 mins
+    21600, // 6 h
+};
+
+void setup() {
+    current_mode = 2; // start from last, will roll back to beginning on start
+    counter_to_next_mode = 0;
+    pinMode(LED_BUILTIN, OUTPUT);
+
+    Serial.begin(9600);
+
+    pinMode(pwm_out, OUTPUT);
+    analogWrite(pwm_out, 0);
+
+    // pins 3 & 4 control direction
+    pinMode(3, OUTPUT);
+    pinMode(4, OUTPUT);
+    digitalWrite(3, HIGH);
+    digitalWrite(4, LOW);
 }
 
-void loop()
-{
-  // turn the LED on (HIGH is the voltage level)
-  digitalWrite(LED_BUILTIN, HIGH);
+void loop() {
+    counter_to_next_mode--;
+    
+    Serial.print("mode: ");
+    Serial.print(current_mode);
+    Serial.print(", time to next mode: ");
+    Serial.print(counter_to_next_mode);
+    Serial.print(", pwm: ");
+    Serial.println(mode_pwms[current_mode]);
+    
+    //digitalWrite(LED_BUILTIN, LOW);
 
-  // wait for a second
-  //delay(1000);
+    if (counter_to_next_mode <= 0) {
+        if (current_mode == 2) {
+            current_mode = 0;
+        } else {
+            current_mode++;
+        }
 
-  // turn the LED off by making the voltage LOW
-  //digitalWrite(LED_BUILTIN, LOW);
+        // debugging only
+        if (current_mode != 2) {
+            digitalWrite(LED_BUILTIN, HIGH);
+        } else {
+            digitalWrite(LED_BUILTIN, LOW);
+        }
 
-   // wait for a second
-  //delay(1000);
+        counter_to_next_mode = mode_keep[current_mode];
+        analogWrite(pwm_out, mode_pwms[current_mode]);
+    }
+
+    delay(1000); // once per second
 }
