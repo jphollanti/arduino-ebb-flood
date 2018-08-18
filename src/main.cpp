@@ -12,13 +12,13 @@ int counter_to_next_mode;
 // pwm describes how fast the pump is
 int mode_pwms[3] = {
   255, 
-  70, // previous used value: 72 
+  72,
   0
 };
 
 // how long each mode should be kept on, in seconds
 int mode_keep[3] = {
-    15, // 27
+    12, // 27
     900, // 15 mins
     21600, // 6 h
 };
