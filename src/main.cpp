@@ -3,23 +3,25 @@
 int pwm_out = 2;
 int current_mode;
 int counter_to_next_mode;
+bool test = false;
 
-// modes are: 
-// 0 = pump
-// 1 = hold
-// 2 = wait
+char mode_names[3][5] = {
+    "pump", 
+    "hold", 
+    "idle"
+};
 
 // pwm describes how fast the pump is
 int mode_pwms[3] = {
   255, 
-  72,
+  65,
   0
 };
 
 // how long each mode should be kept on, in seconds
 int mode_keep[3] = {
-    12, // 27
-    900, // 15 mins
+    8, 
+    300, // 5 mins
     21600, // 6 h
 };
 
@@ -44,7 +46,10 @@ void loop() {
     counter_to_next_mode--;
     
     Serial.print("mode: ");
+    Serial.print(mode_names[current_mode]);
+    Serial.print(" (");
     Serial.print(current_mode);
+    Serial.print(")");
     Serial.print(", time to next mode: ");
     Serial.print(counter_to_next_mode);
     Serial.print(", pwm: ");
